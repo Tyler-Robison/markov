@@ -1,4 +1,5 @@
 /** Textual markov chain generator */
+const { reduce } = require('lodash');
 const _ = require('lodash');
 
 class MarkovMachine {
@@ -22,13 +23,22 @@ class MarkovMachine {
   makeChains() {
     // Pushed null to word arr, loop through words.length - 1
 
-    for (let i = 0; i < this.nullArr.length - 1; i++) {
-      if (!this.chainObj[this.nullArr[i]]) {
-        this.chainObj[this.nullArr[i]] = [this.nullArr[i + 1]]
+    // for (let i = 0; i < this.nullArr.length - 1; i++) {
+    //   if (!this.chainObj[this.nullArr[i]]) {
+    //     this.chainObj[this.nullArr[i]] = [this.nullArr[i + 1]]
+    //   } else {
+    //     this.chainObj[this.nullArr[i]].push(this.nullArr[i + 1])
+    //   }
+    // }
+
+    this.nullArr.reduce((accum, nextValue, idx, arr) => {
+      if (!accum[nextValue]) {
+        accum[nextValue] = [arr[idx + 1]]
       } else {
-        this.chainObj[this.nullArr[i]].push(this.nullArr[i + 1])
+        accum[nextValue].push(arr[idx + 1])
       }
-    }
+      return accum
+    }, this.chainObj)
   }
 
 
@@ -62,4 +72,4 @@ const mm3 = new MarkovMachine("I do not like them, Sam, you see.");
 mm2.makeText(10);
 
 
-module.exports = {MarkovMachine};
+module.exports = { MarkovMachine };
